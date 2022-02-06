@@ -5,7 +5,7 @@ branding:
   color: "white"
 inputs:
   packages:
-    description: 'List of packages to install'
+    description: "List of packages to install"
     required: false
 runs:
   using: "composite"
