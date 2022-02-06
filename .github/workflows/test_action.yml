@@ -14,5 +14,6 @@ jobs:
         uses: ./
         with:
           packages: |
-            ops2deb
-            make
+            helm=3.7.2*
+            kustomize=4.4.1*
+            kubectl=1.22.4*

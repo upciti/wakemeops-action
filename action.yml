@@ -7,12 +7,39 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Build APT cache key
+      id: get-cache-key
+      run: |
+        echo "::set-output name=key::wakemeops-${ImageOS}-$(/bin/date -u '+%Y%m%d')"
+      shell: bash
+
+    - name: Fix APT cache permission
+      run: |
+        sudo chown -R "$(id -u)" /var/cache/apt /var/lib/apt/lists/
+      shell: bash
+
+    - name: Load APT cache
+      id: cache
+      uses: actions/cache@v2
+      with:
+        path: |
+          /var/cache/apt/archives
+          /var/lib/apt/lists
+        key: ${{ steps.get-cache-key.outputs.key }}
+
     - name: Install WakeMeOps repository
       run: |
-        sudo ${{ github.action_path }}/install_repository
+        sudo ${{ github.action_path }}/scripts/install_repository
+      shell: bash
+
+    - name: Update APT cache
+      run: time sudo apt-get update -qq
       shell: bash
 
     - name: Install packages
-      run: |
-        sudo ${{ github.action_path }}/install_packages $(echo -n "${{ inputs.packages }}")
+      run: time sudo apt-get install -y --no-install-recommends $(echo -n "${{ inputs.packages }}")
+      shell: bash
+
+    - name: Fix APT cache permission
+      run: sudo chown -R "$(id -u)" /var/cache/apt/archives /var/lib/apt/lists
       shell: bash
