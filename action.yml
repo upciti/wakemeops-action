@@ -1,5 +1,8 @@
-name: 'WakeMeOps'
-description: 'Add WakeMeOps Debian repository and install packages'
+name: "WakeMeOps"
+description: "Add WakeMeOps Debian repository and install packages"
+branding:
+  icon: "box"
+  color: "white"
 inputs:
   packages:
     description: 'List of packages to install'

@@ -2,7 +2,9 @@ name: 🏷️ Keep version tags up-to-date
 
 on:
   release:
-    types: [published]
+    types:
+      - published
+      - edited
 
 jobs:
   actions-tagger:
