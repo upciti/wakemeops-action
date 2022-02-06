@@ -95,5 +95,5 @@ ojZwJyVEwkiJ3SyoD5P/cBxVH5mVNXUS3XB4C2E=
 EOF
 
 cat <<EOF > /etc/apt/sources.list.d/wakemeops.list
-deb http://deb.wakemeops.com/wakemeops/ stable ${@-"dev devops secops terminal desktop"}
+deb http://deb.wakemeops.com/wakemeops/ stable ${@-"dev devops secops terminal"}
 EOF
