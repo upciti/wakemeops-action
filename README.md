@@ -1,11 +1,13 @@
+![cicd](https://github.com/upciti/wakemeops-action/actions/workflows/cicd.yml/badge.svg) 
+
 # wakemeops-action
 
-**Note: This action is currently unstable. Do not use it in production.**
+:warning: **This action is currently unstable. Do not use it in production.**
 
 ## Usage
 
 ```yaml
-- name: Install stuff
+- name: Install dependencies
   uses: upciti/wakemeops-action@main
   with:
     packages: |
