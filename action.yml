@@ -13,7 +13,7 @@ runs:
     - name: Build APT cache key
       id: get-cache-key
       run: |
-        echo "::set-output name=key::wakemeops-${ImageOS}-$(/bin/date -u '+%Y%m%d')"
+        echo "key=wakemeops-${ImageOS}-$(/bin/date -u '+%Y%m%d')" >> $GITHUB_OUTPUT
       shell: bash
 
     - name: Fix APT cache permission
