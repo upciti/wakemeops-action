@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
-
-cat << EOF | base64 --decode > /etc/apt/trusted.gpg.d/wakemeops-keyring.gpg
+WAKEMEOPS_GPG_KEY=$(cat <<-EOF
 mQINBGGzicYBEADnBgApTxF3fFiAkSJuzfz2qKVXXSuouxCUkOV9owKqIWJ2pYoE7nV9cJ67U7UQ
 0+DE0XbNIxBk7GU91kAE/kPjuJImcwIpsq5gHu8PxFfRGNBi4sE6SexZeiQKe+RcnXXst8S9BW45
 S5aX1Rb6MZrqKU4/rDVPov63n1YbLkvJM0u1baAku1quvcSea65gVr9xaeNRZyboTpynBSg5Je4k
@@ -93,7 +91,48 @@ FZlbblsGJH+TgZAJN7rhLVOudP8lB6iR6T2R7j08jW6K5+R91d1QLh529zej93zmM7gN6J006rXN
 BH83C4wFysS9GOkKFWUEFa+A2x65fkr+9trA6fdbbcZsM1isGcqM+C+T2AMf+LSoI18ao7+aDUlv
 ojZwJyVEwkiJ3SyoD5P/cBxVH5mVNXUS3XB4C2E=
 EOF
+)
 
-cat <<EOF > /etc/apt/sources.list.d/wakemeops.list
-deb http://deb.wakemeops.com/wakemeops/ stable ${@-"dev devops secops terminal"}
+WAKEMEOPS_APT_SOURCE=$(cat <<-EOF
+deb http://deb.wakemeops.com/wakemeops/ stable dev devops secops terminal
 EOF
+)
+
+sudo ()
+{
+  [[ $EUID = 0 ]] || set -- command sudo "$@"
+  "$@"
+}
+
+install_packages ()
+{
+  n=0
+  max=2
+  until [ $n -gt $max ]; do
+    set +e
+    (
+      sudo apt-get update -qq &&
+      sudo apt-get install -y --no-install-recommends "$@"
+    )
+    CODE=$?
+    set -e
+    if [ $CODE -eq 0 ]; then
+        break
+    fi
+    if [ $n -eq $max ]; then
+        return $CODE
+    fi
+    echo "apt failed, retrying"
+    n=$(($n + 1))
+  done
+}
+
+install_repository () {
+  echo "$WAKEMEOPS_GPG_KEY" | base64 --decode | sudo tee >/dev/null /etc/apt/trusted.gpg.d/wakemeops-keyring.gpg
+  echo "$WAKEMEOPS_APT_SOURCE" | sudo tee >/dev/null /etc/apt/sources.list.d/wakemeops.list
+}
+
+export DEBIAN_FRONTEND=noninteractive
+export -f sudo
+export -f install_packages
+export -f install_repository
