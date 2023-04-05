@@ -18,6 +18,7 @@ runs:
 
     - name: Fix APT cache permission
       run: |
+        source $GITHUB_ACTION_PATH/utils.sh
         sudo chown -R "$(id -u)" /var/cache/apt /var/lib/apt/lists/
       shell: bash
 
@@ -30,19 +31,10 @@ runs:
           /var/lib/apt/lists
         key: ${{ steps.get-cache-key.outputs.key }}
 
-    - name: Install WakeMeOps repository
+    - name: Install WakeMeOps repository and install packages
       run: |
-        sudo ${{ github.action_path }}/scripts/install_repository
-      shell: bash
-
-    - name: Update APT cache
-      run: time sudo apt-get update -qq
-      shell: bash
-
-    - name: Install packages
-      run: time sudo apt-get install -y --no-install-recommends $(echo -n "${{ inputs.packages }}")
-      shell: bash
-
-    - name: Fix APT cache permission
-      run: sudo chown -R "$(id -u)" /var/cache/apt/archives /var/lib/apt/lists
+        source $GITHUB_ACTION_PATH/utils.sh
+        install_repository
+        time install_packages $(echo -n "${{ inputs.packages }}")
+        sudo chown -R "$(id -u)" /var/cache/apt/archives /var/lib/apt/lists
       shell: bash

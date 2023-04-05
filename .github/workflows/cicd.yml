@@ -4,8 +4,24 @@ on:
   push:
 
 jobs:
-  test:
+  test-vm:
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install packages
+        uses: ./
+        with:
+          packages: |
+            helm=3.7.2*
+            kustomize=4.4.1*
+            kubectl=1.22.4*
+
+  test-container:
+    runs-on: ubuntu-latest
+    container:
+      image: debian:bullseye
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -21,7 +37,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
-    needs: [test]
+    needs: [test-container, test-vm]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
