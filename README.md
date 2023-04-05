@@ -10,7 +10,7 @@
 
 This action lets you easily install packages from the WakeMeOps Debian repository on linux runners.
 
-WakeMeOps is a Debian repository containing - among other things - up-to-date devops tools such as kubectl, kustomize, helm, helmfile, ... 
+WakeMeOps is a Debian repository containing - among other things - up-to-date devops tools such as kubectl, kustomize, helm, helmfile, ...
 
 For more information see https://docs.wakemeops.com and https://github.com/upciti/wakemeops.
 

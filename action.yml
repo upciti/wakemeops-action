@@ -19,6 +19,7 @@ runs:
     - name: Fix APT cache permission
       run: |
         source $GITHUB_ACTION_PATH/utils.sh
+        mkdir -p /var/cache/apt /var/lib/apt/lists/
         sudo chown -R "$(id -u)" /var/cache/apt /var/lib/apt/lists/
       shell: bash
 
