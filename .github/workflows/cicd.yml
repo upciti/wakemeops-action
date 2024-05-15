@@ -35,7 +35,7 @@ jobs:
   test-container-wakemeops-bullseye:
     runs-on: ubuntu-latest
     container:
-      image: wakemeops/debian:bullseye
+      image: wakemeops/debian:bookworm
     steps:
       - name: Checkout
         uses: actions/checkout@v3
